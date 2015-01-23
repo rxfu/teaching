@@ -1,0 +1,63 @@
+@extends('master')
+
+@section('content')
+	@foreach ($indexmarks as $indexmark)
+		<div class="row">
+			<div class="col-md-12">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h4>{{ $indexmark->mark->seq . '. ' . $indexmark->mark->name }}</h4>
+					</div>
+					<div class="panel-body">
+						<div class="table-responsive">
+							<table id="department-table" class="table table-striped table-hover">
+								<thead>
+									<tr>
+										<th>二级指标名称</th>
+										<th>填报内容</th>
+										<th>审核状态</th>
+										<th>通过状态</th>
+									</tr>
+								</thead>
+								<tbody>
+									@foreach ($indexdatas as $indexdata)
+										@if ($indexdata->mark_id == $indexmark->mark_id)
+											<tr>
+												<td>{{ $indexdata->index->seq . '. ' . $indexdata->index->name }}</td>
+												<td>{{ $indexdata->data }}</td>
+												<td>
+													@if ($indexdata->checked == 1)
+														<i class="fa fa-check fa-lg text-success"></i>
+													@else
+														<i class="fa fa-times fa-lg text-danger"></i>
+													@endif
+												</td>
+												<td>
+													@if ($indexdata->passed == 1)
+														<i class="fa fa-check fa-lg text-success"></i>
+													@else
+														<i class="fa fa-times fa-lg text-danger"></i>
+													@endif
+												</td>
+											</tr>
+										@endif
+									@endforeach
+								</tbody>
+							</table>
+						</div>
+					</div>
+					<div class="panel-footer">
+						{{ Form::open(array('action' => array('IndexmarkController@postUpdate', $indexmark->id), 'method' => 'put', 'role' => 'form', 'class' => 'form-horizontal')) }}
+							<div class="form-group">
+								{{ Form::label('mark' . $indexmark->id, '评分：', array('class' => 'col-md-2 col-md-offset-8 control-label')) }}
+								<div class="col-md-2">
+									{{ Form::text('mark' . $indexmark->id, $indexmark->score, array('class' => 'form-control', 'placeholder' => '评分')) }}
+								</div>
+							</div>
+						{{ Form::close() }}
+					</div>
+				</div>
+			</div>
+		</div>
+	@endforeach
+@stop
